@@ -9,7 +9,7 @@ DATABASE = SqliteDatabase('socialpy.db')
 class User(UserMixin, Model):
     username = CharField(unique=True)
     email = CharField(unique=True)
-    password = CharFielf(max_legth = 100)
+    password = CharField(max_length = 100)
     join_date = DateTimeField(default = datetime.datetime.now)
     bio = CharField(default='')
 

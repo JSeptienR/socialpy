@@ -16,12 +16,31 @@ class User(UserMixin, Model):
     class Meta:
         database = DATABASE
 
+    def get_posts(self):
+        return Post.select().where(POST.user == self)
+
+    def get_stream(self):
+        pass
+
     @classmethod
     def create_user(cls, username, email, password):
         try:
             cls.create(username=username, email=email, password=generate_password_hash(password))
         except IntegrityError:
             raise ValueError('User already exists')
+
+
+class Post(Model):
+    timestamp = DateTimeField(default=datetime.datetime.now)
+    user = ForeignKeyField(
+        rel_model=User,
+        rrelated_name='posts'
+    )
+    content = TextField()
+
+    class Meta:
+        database = DATABASE
+
 
 def initialize():
     DATABASE.connect()

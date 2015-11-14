@@ -4,6 +4,16 @@
   <h1>{{ user.username }}</h1>
   <h5>Posts</h5>
   <p>{{ user.posts.count() }}</p>
+  <h5>Followers</h5>
+  <p>{{ user.followers().count() }}</p>
+  <h5>Following</h5>
+  <p>{{ user.following().count() }}</p>
+
+  {% if current_user.is_authenticated and user != current_user %}
+    {% if user not in current_user.following() %}
+      <a href="{{ url_for('follow', username=user.username) }}">Follow</a>
+    {% endif %}
+  {% endif %}
 
 {{ super() }}
 {% endblock %}

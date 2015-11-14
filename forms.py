@@ -12,7 +12,7 @@ def name_exists(form, field):
 
 
 def email_exists(form, field):
-    if User.selct().where(User.email == field.data).exists():
+    if User.select().where(User.email == field.data).exists():
         raise ValidationError('User with that email already exists.')
 
 

@@ -1,5 +1,5 @@
 
-from flask import Flask, g, render_template, flash, redirect, url_for
+from flask import Flask, g, render_template, flash, redirect, url_for, abort
 from flask.ext.bcrypt import check_password_hash
 from flask.ext.login import (LoginManager, login_user, login_user,
                              login_required, logout_user, current_user)
@@ -110,6 +110,46 @@ def stream(username=None):
     if username:
         template = 'user_stream.html'
     return render_template(template, stream=stream, user=user)
+
+
+@app.route('/follow/<username>')
+@login_required
+def follow(username):
+    try:
+        to_user = models.User.get(models.User.username**username)
+    except models.DoesNotExist:
+        pass
+    else:
+        try:
+            models.Relationship.create(
+                from_user=g.user._get_current_object(),
+                to_user=to_user
+            )
+        except models.IntegrityError:
+            pass
+        else:
+            flash("You're now following {}!".format(to_user.username), "success")
+    return redirect(url_for('stream', username=to_user.username))
+
+
+@app.route('/unfollow/<username>')
+@login_required
+def unfollow(username):
+    try:
+        to_user = models.User.get(models.User.username**username)
+    except models.DoesNotExist:
+        pass
+    else:
+        try:
+            models.Relationship.get(
+                from_user=g.user._get_current_object(),
+                to_user=to_user
+            ).delete_instance()
+        except models.IntegrityError:
+            pass
+        else:
+            flash("You're now following {}!".format(to_user.username), "success")
+    return redirect(url_for('stream', username=to_user.username))
 
 
 @app.route('/')

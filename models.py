@@ -18,6 +18,7 @@ class User(UserMixin, Model):
         order_by = ('-join_date',)
 
     def get_posts(self):
+        """ Returns posts posted by this user """
         return Post.select().where(Post.user == self)
 
     def get_stream(self):
@@ -29,7 +30,17 @@ class User(UserMixin, Model):
             User.select().join(
                 Relationship, on=Relationship.to_user
             ).where(
-                Reltionship.from_user == self
+                Relationship.from_user == self
+            )
+        )
+
+    def followers(self):
+        """ The users following current users """
+        return (
+            User.select().join(
+                Relationship, on=Relationship.from_user
+            ).where(
+                Relationship.to_user == self
             )
         )
 
@@ -67,5 +78,5 @@ class Relationship(Model):
 
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([User, Post], safe=True)
+    DATABASE.create_tables([User, Post, Relationship], safe=True)
     DATABASE.close()

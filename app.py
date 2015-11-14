@@ -83,6 +83,7 @@ def logout():
     flash("You've been logged out!", "Success")
     return redirect(url_for('index'))
 
+
 @app.route('/new_post', methods=('GET', 'POST'))
 @login_required
 def post():
@@ -97,6 +98,7 @@ def post():
 
 @app.route('/stream')
 @app.route('/stream/<username>')
+@login_required
 def stream(username=None):
     template = 'stream.html'
     if username and username != current_user.username:
@@ -107,7 +109,7 @@ def stream(username=None):
         user = current_user
     if username:
         template = 'user_stream.html'
-    return render_template(template, stream=stream)
+    return render_template(template, stream=stream, user=user)
 
 
 @app.route('/')

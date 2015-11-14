@@ -1,0 +1,9 @@
+{% extends "stream.html" %}
+
+{% block content %}
+  <h1>{{ user.username }}</h1>
+  <h5>Posts</h5>
+  <p>{{ user.posts.count() }}</p>
+
+{{ super() }}
+{% endblock %}

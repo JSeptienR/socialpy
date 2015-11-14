@@ -1,0 +1,7 @@
+{% extends "layout.html" %}
+{% block content %}
+  <article>
+    <h2> </h2>
+    <i class="clock"></></i><time data-time="{{ post.timestamp }}" class="distime" datetime="{{ post.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}">{{ post.timestamp.strftime('%Y-%m-%d %H:%M:%S')}}</time>
+  </article>
+{% endblock %}
